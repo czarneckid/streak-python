@@ -53,7 +53,6 @@ class Streak:
 
       pipe.execute()
     else:
-
       pipe = self.redis.pipeline()
       pipe.get('%s:%s:%s' \
         % (self.options['namespace'], self.options['negative_key'], id))
