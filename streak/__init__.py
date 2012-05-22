@@ -14,16 +14,18 @@ class Streak:
     total_key = 'total'
   )
 
-  def __init__(self):
+  def __init__(self, default_options = DEFAULTS):
+    self.options = Streak.DEFAULTS.copy()
+    self.options.update(default_options)
     self.redis = redis.StrictRedis(host = 'localhost', port = 6379, db = 0)
 
   def aggregate(self, id, count):
     if count >= 0:
       pipe = self.redis.pipeline()
       pipe.get('%s:%s:%s' \
-        % (Streak.DEFAULTS['namespace'], Streak.DEFAULTS['positive_key'], id))
+        % (self.options['namespace'], self.options['positive_key'], id))
       pipe.get('%s:%s:%s' \
-        % (Streak.DEFAULTS['namespace'], Streak.DEFAULTS['positive_streak_key'], id))
+        % (self.options['namespace'], self.options['positive_streak_key'], id))
       previous_data = pipe.execute()
 
       previous_wins = previous_data[0]
@@ -39,24 +41,24 @@ class Streak:
 
       pipe = self.redis.pipeline()
       pipe.set('%s:%s:%s' \
-        % (Streak.DEFAULTS['namespace'], Streak.DEFAULTS['positive_streak_key'], id), max([previous_wins + abs(count), previous_streak]))
+        % (self.options['namespace'], self.options['positive_streak_key'], id), max([previous_wins + abs(count), previous_streak]))
       pipe.incr('%s:%s:%s' \
-        % (Streak.DEFAULTS['namespace'], Streak.DEFAULTS['positive_key'], id), abs(count))
+        % (self.options['namespace'], self.options['positive_key'], id), abs(count))
       pipe.incr('%s:%s:%s' \
-        % (Streak.DEFAULTS['namespace'], Streak.DEFAULTS['positive_total_key'], id), abs(count))
+        % (self.options['namespace'], self.options['positive_total_key'], id), abs(count))
       pipe.set('%s:%s:%s' \
-        % (Streak.DEFAULTS['namespace'], Streak.DEFAULTS['negative_key'], id), 0)
+        % (self.options['namespace'], self.options['negative_key'], id), 0)
       pipe.incr('%s:%s:%s' \
-        % (Streak.DEFAULTS['namespace'], Streak.DEFAULTS['total_key'], id), abs(count))
+        % (self.options['namespace'], self.options['total_key'], id), abs(count))
 
       pipe.execute()
     else:
 
       pipe = self.redis.pipeline()
       pipe.get('%s:%s:%s' \
-        % (Streak.DEFAULTS['namespace'], Streak.DEFAULTS['negative_key'], id))
+        % (self.options['namespace'], self.options['negative_key'], id))
       pipe.get('%s:%s:%s' \
-        % (Streak.DEFAULTS['namespace'], Streak.DEFAULTS['negative_streak_key'], id))
+        % (self.options['namespace'], self.options['negative_streak_key'], id))
       previous_data = pipe.execute()
 
       previous_losses = previous_data[0]
@@ -72,15 +74,15 @@ class Streak:
 
       pipe = self.redis.pipeline()
       pipe.set('%s:%s:%s' \
-        % (Streak.DEFAULTS['namespace'], Streak.DEFAULTS['negative_streak_key'], id), max([previous_losses + abs(count), previous_streak]))
+        % (self.options['namespace'], self.options['negative_streak_key'], id), max([previous_losses + abs(count), previous_streak]))
       pipe.incr('%s:%s:%s' \
-        % (Streak.DEFAULTS['namespace'], Streak.DEFAULTS['negative_key'], id), abs(count))
+        % (self.options['namespace'], self.options['negative_key'], id), abs(count))
       pipe.incr('%s:%s:%s' \
-        % (Streak.DEFAULTS['namespace'], Streak.DEFAULTS['negative_total_key'], id), abs(count))
+        % (self.options['namespace'], self.options['negative_total_key'], id), abs(count))
       pipe.set('%s:%s:%s' \
-        % (Streak.DEFAULTS['namespace'], Streak.DEFAULTS['positive_key'], id), 0)
+        % (self.options['namespace'], self.options['positive_key'], id), 0)
       pipe.incr('%s:%s:%s' \
-        % (Streak.DEFAULTS['namespace'], Streak.DEFAULTS['total_key'], id), abs(count))
+        % (self.options['namespace'], self.options['total_key'], id), abs(count))
       
       pipe.execute()
 
@@ -89,16 +91,16 @@ class Streak:
       DEFAULTS['total_key']]):
     pipe = self.redis.pipeline()
     for key in keys:
-      pipe.get('%s:%s:%s' % (Streak.DEFAULTS['namespace'], key, id))
+      pipe.get('%s:%s:%s' % (self.options['namespace'], key, id))
     values = pipe.execute()
-    return dict(zip(keys, map(lambda value: int(value), values)))
+    return dict(zip(keys, map(int, values)))
 
   def reset_statistics(self, id):
-    keys = [Streak.DEFAULTS['positive_key'], Streak.DEFAULTS['positive_total_key'], Streak.DEFAULTS['positive_streak_key'],
-      Streak.DEFAULTS['negative_key'], Streak.DEFAULTS['negative_total_key'], Streak.DEFAULTS['negative_streak_key'],
-      Streak.DEFAULTS['total_key']]
+    keys = [self.options['positive_key'], self.options['positive_total_key'], self.options['positive_streak_key'],
+      self.options['negative_key'], self.options['negative_total_key'], self.options['negative_streak_key'],
+      self.options['total_key']]
 
     pipe = self.redis.pipeline()
     for key in keys:
-      pipe.set('%s:%s:%s' % (Streak.DEFAULTS['namespace'], key, id), 0)
+      pipe.set('%s:%s:%s' % (self.options['namespace'], key, id), 0)
     pipe.execute()

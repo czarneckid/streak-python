@@ -21,6 +21,26 @@ class StreakTestCase(unittest.TestCase):
     self.assertEquals('losses_streak', Streak.DEFAULTS['negative_streak_key'])
     self.assertEquals('total', Streak.DEFAULTS['total_key'])
 
+  def test_default_options_in_initializer(self):
+    streak = Streak(dict(
+      positive_key = 'kills',
+      positive_total_key = 'kills_total',
+      positive_streak_key = 'kills_streak',
+      negative_key = 'deaths',
+      negative_total_key = 'deaths_total',
+      negative_streak_key = 'deaths_streak'
+    ))
+
+    options = streak.options
+    self.assertEquals('streak', options['namespace'])
+    self.assertEquals('kills', options['positive_key'])
+    self.assertEquals('kills_total', options['positive_total_key'])
+    self.assertEquals('kills_streak', options['positive_streak_key'])
+    self.assertEquals('deaths', options['negative_key'])
+    self.assertEquals('deaths_total', options['negative_total_key'])
+    self.assertEquals('deaths_streak', options['negative_streak_key'])
+    self.assertEquals('total', options['total_key'])
+
   def test_aggregate_statistics_and_reset_statistics(self):
     streak = Streak()
     streak.aggregate('david', 3)
