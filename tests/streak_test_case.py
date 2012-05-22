@@ -7,9 +7,8 @@ from streak import Streak
 class StreakTestCase(unittest.TestCase):
 
   def setUp(self):
-    self.streak = Streak()
-    redis = self.streak.redis
-    redis.flushdb()
+    self.redis = redis.StrictRedis(host = 'localhost', port = 6379, db = 15)    
+    self.redis.flushdb()
 
   def test_streak_default_values(self):
     self.assertEquals('streak', Streak.DEFAULTS['namespace'])
@@ -31,6 +30,8 @@ class StreakTestCase(unittest.TestCase):
       negative_streak_key = 'deaths_streak'
     ))
 
+    streak.redis = self.redis
+
     options = streak.options
     self.assertEquals('streak', options['namespace'])
     self.assertEquals('kills', options['positive_key'])
@@ -43,6 +44,8 @@ class StreakTestCase(unittest.TestCase):
 
   def test_aggregate_statistics_and_reset_statistics(self):
     streak = Streak()
+    streak.redis = self.redis
+
     streak.aggregate('david', 3)
     streak.aggregate('david', -2)
     streak.aggregate('david', 5)
