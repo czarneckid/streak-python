@@ -15,7 +15,7 @@ setup(
   author_email = "me@davidczarnecki.com",
   packages = ['streak'],
   install_requires = requirements,
-  url = 'https://github.com/czarneckid/streak-py',
+  url = 'https://github.com/czarneckid/streak-python',
   license = "LICENSE",
   description = 'Library for calculating win/loss streaks using Redis as a backend',
   long_description = open('README.md').read(),
