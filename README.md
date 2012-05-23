@@ -5,6 +5,26 @@ This is a Python port of the original [streak](https://github.com/czarneckid/str
 
 ## Installation
 
+streak is available on [pypi](http://pypi.python.org/pypi/streak) and can be installed using `pip`:
+
+```
+pip install streak
+```
+
+If installing from source:
+
+With development requirements (e.g. testing frameworks):
+
+```
+pip install -r development.txt
+```
+
+Without development requirements:
+
+```
+pip install -r requirements.txt
+```
+
 ## Usage
 
 ```python
