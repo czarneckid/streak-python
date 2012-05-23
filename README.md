@@ -5,7 +5,7 @@ This is a Python port of the original [streak](https://github.com/czarneckid/str
 
 ## Installation
 
-streak is available on [pypi](http://pypi.python.org/pypi/streak) and can be installed using `pip`:
+streak is available on [PyPI](http://pypi.python.org/pypi/streak) and can be installed using `pip`:
 
 ```
 pip install streak
