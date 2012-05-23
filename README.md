@@ -24,6 +24,27 @@ This is a Python port of the original [streak](https://github.com/czarneckid/str
 >>> 
 ```
 
+You can also configure the keys used in Redis:
+
+```python
+>>> streak = Streak(dict(
+  namespace = 'streak',
+  positive_key = 'kills',
+  positive_total_key = 'kills_total',
+  positive_streak_key = 'kills_streak',
+  negative_key = 'deaths',
+  negative_total_key = 'deaths_total',
+  negative_streak_key = 'deaths_streak',
+  total_key = 'total'
+))
+```
+
+If you need to set the Redis instance to something other than `localhost:6379/0`, you can do:
+
+```python
+streak.redis = redis.StrictRedis(host = 'some.host', port = 6379, db = 7)
+```
+
 ## Contributing
 
 1. Fork it

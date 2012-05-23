@@ -20,6 +20,19 @@ class StreakTestCase(unittest.TestCase):
     self.assertEquals('losses_streak', Streak.DEFAULTS['negative_streak_key'])
     self.assertEquals('total', Streak.DEFAULTS['total_key'])
 
+  def test_can_retrieve_statistics_without_data(self):
+    streak = Streak()
+    statistics = streak.statistics('david')
+
+    self.assertEquals(7, len(statistics))
+    self.assertEquals(0, statistics['wins'])
+    self.assertEquals(0, statistics['wins_total'])
+    self.assertEquals(0, statistics['wins_streak'])
+    self.assertEquals(0, statistics['losses'])
+    self.assertEquals(0, statistics['losses_total'])
+    self.assertEquals(0, statistics['losses_streak'])
+    self.assertEquals(0, statistics['total'])
+
   def test_default_options_in_initializer(self):
     streak = Streak(dict(
       positive_key = 'kills',

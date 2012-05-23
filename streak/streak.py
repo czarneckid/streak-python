@@ -83,21 +83,28 @@ class Streak(object):
       
       pipe.execute()
 
-  def statistics(self, id, keys = [DEFAULTS['positive_key'], DEFAULTS['positive_total_key'], DEFAULTS['positive_streak_key'],
-      DEFAULTS['negative_key'], DEFAULTS['negative_total_key'], DEFAULTS['negative_streak_key'],
-      DEFAULTS['total_key']]):
+  def statistics(self, id, keys = []):
+    if len(keys) == 0:
+      keys = self.slicedict(self.options, 'namespace').values()
+
     pipe = self.redis.pipeline()
     for key in keys:
       pipe.get('%s:%s:%s' % (self.options['namespace'], key, id))
     values = pipe.execute()
+
+    for index, value in enumerate(values):
+      if value == None:
+        values[index] = 0
+
     return dict(zip(keys, map(int, values)))
 
   def reset_statistics(self, id):
-    keys = [self.options['positive_key'], self.options['positive_total_key'], self.options['positive_streak_key'],
-      self.options['negative_key'], self.options['negative_total_key'], self.options['negative_streak_key'],
-      self.options['total_key']]
+    keys = keys = self.slicedict(self.options, 'namespace').values()
 
     pipe = self.redis.pipeline()
     for key in keys:
       pipe.set('%s:%s:%s' % (self.options['namespace'], key, id), 0)
     pipe.execute()
+
+  def slicedict(self, userdict, substring):
+    return { key:value for key,value in userdict.iteritems() if not key.startswith(substring) }
