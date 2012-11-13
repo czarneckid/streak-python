@@ -1,16 +1,16 @@
 import redis
 
 class Streak(object):
-  DEFAULTS = dict(
-    namespace = 'streak',
-    positive_key = 'wins',
-    positive_total_key = 'wins_total',
-    positive_streak_key = 'wins_streak',
-    negative_key = 'losses',
-    negative_total_key = 'losses_total',
-    negative_streak_key = 'losses_streak',
-    total_key = 'total'
-  )
+  DEFAULTS = {
+    'namespace': 'streak',
+    'positive_key': 'wins',
+    'positive_total_key': 'wins_total',
+    'positive_streak_key': 'wins_streak',
+    'negative_key': 'losses',
+    'negative_total_key': 'losses_total',
+    'negative_streak_key': 'losses_streak',
+    'total_key': 'total'
+  }
 
   def __init__(self, default_options = DEFAULTS):
     self.options = Streak.DEFAULTS.copy()

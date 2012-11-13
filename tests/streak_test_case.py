@@ -7,7 +7,7 @@ from streak import Streak
 class StreakTestCase(unittest.TestCase):
 
   def setUp(self):
-    self.redis = redis.StrictRedis(host = 'localhost', port = 6379, db = 15)    
+    self.redis = redis.StrictRedis(host = 'localhost', port = 6379, db = 0)
     self.redis.flushdb()
 
   def test_streak_default_values(self):
@@ -34,14 +34,14 @@ class StreakTestCase(unittest.TestCase):
     self.assertEquals(0, statistics['total'])
 
   def test_default_options_in_initializer(self):
-    streak = Streak(dict(
-      positive_key = 'kills',
-      positive_total_key = 'kills_total',
-      positive_streak_key = 'kills_streak',
-      negative_key = 'deaths',
-      negative_total_key = 'deaths_total',
-      negative_streak_key = 'deaths_streak'
-    ))
+    streak = Streak({
+      'positive_key': 'kills',
+      'positive_total_key': 'kills_total',
+      'positive_streak_key': 'kills_streak',
+      'negative_key': 'deaths',
+      'negative_total_key': 'deaths_total',
+      'negative_streak_key': 'deaths_streak'
+    })
 
     streak.redis = self.redis
 
