@@ -1,6 +1,6 @@
 # streak
 
-streak is a library for calculating win/loss streaks. It uses Redis as its backend for collecting the data. 
+streak is a library for calculating win/loss streaks. It uses Redis as its backend for collecting the data.
 This is a Python port of the original [streak](https://github.com/czarneckid/streak) Ruby gem.
 
 ## Installation
@@ -41,7 +41,7 @@ pip install -r requirements.txt
 >>> statistics = streak.statistics('david')
 >>> print statistics
 {'losses_streak': 0, 'wins_streak': 0, 'wins': 0, 'losses_total': 0, 'losses': 0, 'wins_total': 0, 'total': 0}
->>> 
+>>>
 ```
 
 You can also configure the keys used in Redis:
@@ -75,4 +75,4 @@ streak.redis = redis.StrictRedis(host = 'some.host', port = 6379, db = 7)
 
 ## Copyright
 
-Copyright (c) 2012-2013 David Czarnecki. See LICENSE for further details.
+Copyright (c) 2012-2014 David Czarnecki. See LICENSE for further details.
